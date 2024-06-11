@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExoticData</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1, h6, form, div {
+            margin-bottom: 1em;
+        }
+
+        #chart-container {
+            width: 80%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ExoticData</h1>
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <input type="file" name="datafile" accept=".csv">
+        <button type="submit">Cargar y Analizar</button>
+    </form>
+    <div>
+        {% if tables %}
+            {{ tables|safe }}
+        {% endif %}
+    </div>
+
+    <div id="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <h6>By Miguel Angel Gonzalez Zuluaga, Juan Pablo Giron</h6>
+
+    <script>
+        var labels = {{ labels | safe }};
+        var values = {{ values | safe }};
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Dataset',
+                    data: values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
